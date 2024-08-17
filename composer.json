@@ -15,6 +15,7 @@
         }
     },
     "require": {
+        "php": ">=8.2",
         "symfony/yaml": "^7.1",
         "nikic/php-parser": "^5.1",
         "symfony/console": "^7.1",
@@ -27,13 +28,11 @@
     },
     "bin": [
         "bin/lynter"
-
     ],
     "scripts": {
         "fix": "php-cs-fixer fix",
         "check-style": "php-cs-fixer fix --dry-run --diff",
         "analyse": "phpstan analyse",
         "test": "phpunit"
-
     }
 }
