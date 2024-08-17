@@ -8,13 +8,6 @@
 # VSCode
 .vscode/
 
-# PHPStan
-/phpstan.neon
-
-# PHPUnit
-/phpunit.xml
-/phpunit.xml.dist
-
 # Coverage reports
 /coverage/
 /.clover
