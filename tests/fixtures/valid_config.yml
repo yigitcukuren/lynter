@@ -1,0 +1,14 @@
+rules:
+  restrictFunction:
+    functions:
+      - eval
+      - exec
+      - shell_exec
+    message: "Function '{name}' is not allowed."
+  
+  restrictVariable:
+    variables:
+      - $_GET
+      - $_POST
+      - $_REQUEST
+    message: "Variables '{name}' is restricted."

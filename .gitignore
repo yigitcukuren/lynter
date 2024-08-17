@@ -1,0 +1,39 @@
+# Composer dependencies
+/vendor/
+
+# PHPStorm / JetBrains IDEs
+/.idea/
+/*.iml
+
+# VSCode
+.vscode/
+
+# PHPStan
+/phpstan.neon
+
+# PHPUnit
+/phpunit.xml
+/phpunit.xml.dist
+
+# Coverage reports
+/coverage/
+/.clover
+.php_cs.cache
+/.php_cs.cache
+/.php_cs_fixer.cache
+
+# Log files
+*.log
+
+# Cache and temp files
+*.cache
+*.tmp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.*.local

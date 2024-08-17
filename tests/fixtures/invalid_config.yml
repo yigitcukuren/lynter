@@ -1,0 +1,7 @@
+rules:
+  restrictFunction:
+    functions:
+      - eval
+  # Invalid YAML syntax
+    message: "Function '{name}' is not allowed."
+  -
