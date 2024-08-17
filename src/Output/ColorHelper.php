@@ -45,7 +45,7 @@ class ColorHelper
      */
     public static function softRed(string $text): string
     {
-        return "\033[91m$text\033[0m"; // Softer Red (Bright Red)
+        return "\033[91m" . $text . self::COLOR_RESET; // Softer Red (Bright Red)
     }
 
     /**
@@ -78,6 +78,6 @@ class ColorHelper
      */
     public static function gray(string $text): string
     {
-        return "\033[90m$text\033[0m"; // Gray
+        return "\033[90m" . $text . self::COLOR_RESET; // Gray
     }
 }

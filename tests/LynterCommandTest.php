@@ -7,9 +7,19 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
+/**
+ * Class LynterCommandTest
+ *
+ * Tests the functionality of the LynterCommand class.
+ */
 class LynterCommandTest extends TestCase
 {
-    public function xtestExecuteWithNoIssues(): void
+    /**
+     * Tests the execution of the command when no issues are found.
+     *
+     * @return void
+     */
+    public function testExecuteWithNoIssues(): void
     {
         $application = new Application();
         $command = new LynterCommand();
@@ -25,6 +35,11 @@ class LynterCommandTest extends TestCase
         $this->assertStringContainsString('No issues found.', $output);
     }
 
+    /**
+     * Tests the execution of the command when issues are found.
+     *
+     * @return void
+     */
     public function testExecuteWithIssues(): void
     {
         $application = new Application();
@@ -40,12 +55,12 @@ class LynterCommandTest extends TestCase
         $output = $commandTester->getDisplay();
 
         // Check for the restricted 'eval' function
-        $this->assertStringContainsString('Function \'eval\' is not allowed.', $output);
+        $this->assertStringContainsString("Function 'eval' is not allowed.", $output);
 
-        // Check for another restricted function, e.g., 'exec'
-        $this->assertStringContainsString('Function \'shell_exec\' is not allowed.', $output);
+        // Check for another restricted function, e.g., 'shell_exec'
+        $this->assertStringContainsString("Function 'shell_exec' is not allowed.", $output);
 
         // Check for a non-restricted function to ensure it does not trigger an error
-        $this->assertStringNotContainsString('Function \'nonRestrictedFunction\' is not allowed.', $output);
+        $this->assertStringNotContainsString("Function 'nonRestrictedFunction' is not allowed.", $output);
     }
 }

@@ -5,8 +5,18 @@ namespace Tests\Output;
 use Lynter\Output\JsonFormatter;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Class JsonFormatterTest
+ *
+ * Tests the functionality of the JsonFormatter class.
+ */
 class JsonFormatterTest extends TestCase
 {
+    /**
+     * Tests formatting with issues present.
+     *
+     * @return void
+     */
     public function testFormatWithIssues(): void
     {
         $formatter = new JsonFormatter();
@@ -30,6 +40,11 @@ class JsonFormatterTest extends TestCase
         $this->assertJsonStringEqualsJsonString($expectedJson, $actualJson);
     }
 
+    /**
+     * Tests formatting with no issues present.
+     *
+     * @return void
+     */
     public function testFormatWithoutIssues(): void
     {
         $formatter = new JsonFormatter();
