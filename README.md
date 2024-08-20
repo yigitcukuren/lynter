@@ -21,7 +21,7 @@ Lynter is a PHP code analysis tool focused on restricting specific usages within
 To install Lynter, use Composer:
 
 ```bash
-composer require --dev yigitcukuren/lynter
+composer require --dev lynter/lynter
 ```
 
 Make sure to include Lynter in your `composer.json` file's `require-dev` section for development dependencies.
