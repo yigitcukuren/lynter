@@ -159,7 +159,7 @@ class LynterCommand extends Command
         foreach ($chunks as $chunk) {
             $process = new Process([
                 PHP_BINARY,
-                'bin/lynter',
+                $_SERVER['SCRIPT_FILENAME'],
                 'analyze',
                 '--config=' . $configFile,
                 '--output=json', // Force JSON output for parallel processing
