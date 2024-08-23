@@ -1,22 +1,64 @@
 rules:
-  restrictFunction:
-    functions:
+  - name: restrict-eval-function
+    rule: restrictFunction
+    matcher: exact
+    values:
       - eval
+    message: "The use of '{value}' is prohibited due to security risks."
+
+  - name: restrict-dangerous-functions
+    rule: restrictFunction
+    matcher: exact
+    values:
       - exec
       - shell_exec
-    message: "Function '{name}' is not allowed."
-  
-  restrictVariable:
-    variables:
+      - system
+      - passthru
+      - popen
+    message: "The use of '{value}' is prohibited due to security risks."
+
+  - name: restrict-global-variables
+    rule: restrictVariable
+    matcher: exact
+    values:
       - $_GET
       - $_POST
+      - $_COOKIE
       - $_REQUEST
-    message: "Variables '{name}' is restricted."
-  
-  restrictClass:
-    classes:
-      - MyRestrictedClass
-    message: "Instantiation of '{name}' is not allowed."
+      - $_FILES
+      - $_ENV
+      - $_SESSION
+    message: "Direct access to superglobals '{value}' is discouraged. Use proper sanitization and validation methods."
+
+  - name: restrict-deprecated-functions
+    rule: restrictFunction
+    matcher: exact
+    values:
+      - mysql_query
+      - ereg
+    message: "The use of deprecated function '{value}' is prohibited. Use modern alternatives."
+
+  - name: restrict-raw-sql
+    rule: restrictFunction
+    matcher: pattern
+    values:
+      - '/^query/'
+    message: "The use of raw SQL queries via '{value}' is discouraged. Use prepared statements or ORM instead."
+
+  - name: restrict-output-debugging
+    rule: restrictFunction
+    matcher: exact
+    values:
+      - var_dump
+      - print_r
+    message: "Debugging output function '{value}' is not allowed in production code."
+
+  - name: enforce-psr-standards
+    rule: restrictFunction
+    matcher: exact
+    values:
+      - extract
+    message: "Avoid using '{value}'. Adhere to PSR coding standards."
 
 exclude:
   - vendor/
