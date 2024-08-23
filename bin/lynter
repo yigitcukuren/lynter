@@ -11,7 +11,7 @@ foreach ([__DIR__ . '/../../../autoload.php', __DIR__ . '/../vendor/autoload.php
 use Lynter\Command\LynterCommand;
 use Symfony\Component\Console\Application;
 
-$application = new Application('Lynter', '0.1.5');
+$application = new Application('Lynter', '0.1.6');
 
 // Register the LynterCommand
 $application->add(new LynterCommand());
