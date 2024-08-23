@@ -1,7 +1,10 @@
 rules:
-  restrictFunction:
-    functions:
+  - name: restrict-functions
+    rule: restrictFunction
+    matcher: exact
+    values:
       - eval
-  # Invalid YAML syntax
-    message: "Function '{name}' is not allowed."
-  -
+      - exec
+      - shell_exec
+    message: "This function '{value}' is not allowed."
+- 

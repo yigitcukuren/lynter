@@ -5,39 +5,44 @@ namespace Lynter\Rules;
 use Lynter\RuleInterface;
 use PhpParser\Node;
 use PhpParser\Node\Expr\New_;
-use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Name;
 
 /**
  * Class RestrictClassRule
  *
- * A rule that restricts the use of certain classes in the code.
+ * A rule that restricts the instantiation of certain classes in the code.
  */
 class RestrictClassRule implements RuleInterface
 {
     /**
-     * @var array<string> The list of classes to restrict.
+     * @var array<string> List of class names or patterns to restrict.
      */
-    private array $restrictedClasses;
+    private array $values;
 
     /**
-     * @var string The message template for reporting violations.
+     * @var string The matching strategy ('exact' or 'pattern').
+     */
+    private string $matcher;
+
+    /**
+     * @var string The message to display when a restricted class is used.
      */
     private string $message;
 
     /**
      * RestrictClassRule constructor.
      *
-     * @param array<string, mixed> $config The configuration for this rule.
+     * @param array<string, mixed> $config The configuration for the rule.
      */
     public function __construct(array $config)
     {
-        $this->restrictedClasses = $config['classes'] ?? [];
-        $this->message = $config['message'] ?? "Class '{name}' is restricted.";
+        $this->values = $config['values'] ?? [];
+        $this->matcher = $config['matcher'] ?? 'exact';
+        $this->message = $config['message'] ?? "Class '{value}' is restricted.";
     }
 
     /**
-     * Determine if this rule applies to the given AST node.
+     * Determines if this rule applies to the given AST node.
      *
      * @param Node $node The AST node to check.
      *
@@ -45,47 +50,38 @@ class RestrictClassRule implements RuleInterface
      */
     public function appliesTo(Node $node): bool
     {
-        if ($node instanceof New_ || $node instanceof StaticCall) {
-            $className = $this->resolveClassName($node);
-            return $className !== null && in_array($className, $this->restrictedClasses, true);
+        if ($node instanceof New_ && $node->class instanceof Name) {
+            $className = $node->class->toString();
+
+            if ($this->matcher === 'exact') {
+                return in_array($className, $this->values, true);
+            } elseif ($this->matcher === 'pattern') {
+                foreach ($this->values as $pattern) {
+                    if (preg_match($pattern, $className)) {
+                        return true;
+                    }
+                }
+            }
         }
 
         return false;
     }
 
     /**
-     * Get the error message for a violation of this rule.
+     * Generates an error message when a restricted class is used.
      *
-     * @param Node $node The AST node that violated the rule.
+     * @param Node $node The AST node that triggered the rule.
      *
      * @return string The formatted error message.
      */
     public function getErrorMessage(Node $node): string
     {
-        $className = $this->resolveClassName($node);
-
-        if ($className === null) {
-            return 'Unknown class name violated the rule.';
+        if ($node instanceof New_ && $node->class instanceof Name) {
+            $className = $node->class->toString();
+        } else {
+            $className = 'unknown';
         }
 
-        return str_replace('{name}', $className, $this->message);
-    }
-
-    /**
-     * Resolves the class name from the given node.
-     *
-     * @param Node $node The AST node to resolve the class name from.
-     *
-     * @return string|null The class name if it can be resolved, null otherwise.
-     */
-    private function resolveClassName(Node $node): ?string
-    {
-        if ($node instanceof New_ || $node instanceof StaticCall) {
-            if ($node->class instanceof Name) {
-                return $node->class->toString();
-            }
-        }
-
-        return null;
+        return str_replace('{value}', $className, $this->message);
     }
 }

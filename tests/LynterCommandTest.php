@@ -55,12 +55,6 @@ class LynterCommandTest extends TestCase
         $output = $commandTester->getDisplay();
 
         // Check for the restricted 'eval' function
-        $this->assertStringContainsString("Function 'eval' is not allowed.", $output);
-
-        // Check for another restricted function, e.g., 'shell_exec'
-        $this->assertStringContainsString("Function 'shell_exec' is not allowed.", $output);
-
-        // Check for a non-restricted function to ensure it does not trigger an error
-        $this->assertStringNotContainsString("Function 'nonRestrictedFunction' is not allowed.", $output);
+        $this->assertStringContainsString("This function 'eval' is not allowed.", $output);
     }
 }

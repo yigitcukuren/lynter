@@ -1,0 +1,14 @@
+rules:
+  - name: restrict-nonexistent-rule
+    rule: restrictNonexistentRule
+    matcher: exact
+    values:
+      - nonexistentFunction
+    message: "This rule does not exist."
+
+  - name: restrict-variables
+    rule: restrictVariable
+    matcher: exact
+    values:
+      - $_GET
+    message: "This variable '{value}' is restricted."

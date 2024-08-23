@@ -5,16 +5,8 @@ rules:
     values:
       - eval
       - exec
-      - shell_exec
     message: "This function '{value}' is not allowed."
-  
-  - name: restrict-functions-regex
-    rule: restrictFunction
-    matcher: pattern
-    values:
-      - '/^debug_/'
-    message: "This function matching '{value}' is not allowed."
-
+    
   - name: restrict-variables
     rule: restrictVariable
     matcher: exact
@@ -22,3 +14,7 @@ rules:
       - $_GET
       - $_POST
     message: "This variable '{value}' is restricted."
+  
+    exclude:
+  - vendor/
+  - tests/

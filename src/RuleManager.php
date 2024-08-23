@@ -35,8 +35,8 @@ class RuleManager
      */
     private function loadRules(array $rulesConfig): void
     {
-        foreach ($rulesConfig as $ruleName => $ruleConfig) {
-            $className = 'Lynter\\Rules\\' . ucfirst($ruleName) . 'Rule';
+        foreach ($rulesConfig as $ruleConfig) {
+            $className = 'Lynter\\Rules\\' . ucfirst($ruleConfig['rule']) . 'Rule';
             if (class_exists($className)) {
                 $this->rules[] = new $className($ruleConfig);
             }

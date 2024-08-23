@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 class AnalyzerTest extends TestCase
 {
     /**
-     * Tests analyzing a file that contains issues.
+     * Tests the analyzer with a file that contains issues.
      *
      * @return void
      */
@@ -22,9 +22,12 @@ class AnalyzerTest extends TestCase
     {
         $config = [
             'rules' => [
-                'restrictFunction' => [
-                    'functions' => ['eval'],
-                    'message' => "Function '{name}' is not allowed.",
+                [
+                    'name' => 'restrict-functions',
+                    'rule' => 'restrictFunction',
+                    'matcher' => 'exact',
+                    'values' => ['eval'],
+                    'message' => "This function '{value}' is not allowed.",
                 ],
             ],
         ];
@@ -35,11 +38,11 @@ class AnalyzerTest extends TestCase
         $issues = $analyzer->analyzeFile(__DIR__ . '/fixtures/with_issues.php');
 
         $this->assertCount(1, $issues);
-        $this->assertSame("Function 'eval' is not allowed.", $issues[0]['message']);
+        $this->assertSame("This function 'eval' is not allowed.", $issues[0]['message']);
     }
 
     /**
-     * Tests analyzing a file that contains no issues.
+     * Tests the analyzer with a file that contains no issues.
      *
      * @return void
      */
@@ -47,9 +50,12 @@ class AnalyzerTest extends TestCase
     {
         $config = [
             'rules' => [
-                'restrictFunction' => [
-                    'functions' => ['eval'],
-                    'message' => "Function '{name}' is not allowed.",
+                [
+                    'name' => 'restrict-functions',
+                    'rule' => 'restrictFunction',
+                    'matcher' => 'exact',
+                    'values' => ['eval'],
+                    'message' => "This function '{value}' is not allowed.",
                 ],
             ],
         ];

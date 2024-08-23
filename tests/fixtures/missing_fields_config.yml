@@ -1,0 +1,12 @@
+rules:
+  - rule: restrictFunction
+    matcher: exact
+    values:
+      - eval
+    message: "This function '{value}' is not allowed."
+
+  - name: restrict-variables
+    matcher: exact
+    values:
+      - $_GET
+    message: "This variable '{value}' is restricted."

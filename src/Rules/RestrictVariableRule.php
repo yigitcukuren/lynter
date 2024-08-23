@@ -14,28 +14,34 @@ use PhpParser\Node\Expr\Variable;
 class RestrictVariableRule implements RuleInterface
 {
     /**
-     * @var array<string> The list of variables to restrict.
+     * @var array<string> The list of variable names or patterns to restrict.
      */
-    private array $restrictedVariables;
+    private array $values;
 
     /**
-     * @var string The message template for reporting violations.
+     * @var string The matching strategy ('exact' or 'pattern').
+     */
+    private string $matcher;
+
+    /**
+     * @var string The message to display when a restricted variable is used.
      */
     private string $message;
 
     /**
      * RestrictVariableRule constructor.
      *
-     * @param array<string, mixed> $config The configuration for this rule.
+     * @param array<string, mixed> $config The configuration for the rule.
      */
     public function __construct(array $config)
     {
-        $this->restrictedVariables = $config['variables'] ?? [];
-        $this->message = $config['message'] ?? "Variable '{name}' is restricted.";
+        $this->values = $config['values'] ?? [];
+        $this->matcher = $config['matcher'] ?? 'exact';
+        $this->message = $config['message'] ?? "Variable '{value}' is restricted.";
     }
 
     /**
-     * Determine if this rule applies to the given AST node.
+     * Determines if this rule applies to the given AST node.
      *
      * @param Node $node The AST node to check.
      *
@@ -43,66 +49,38 @@ class RestrictVariableRule implements RuleInterface
      */
     public function appliesTo(Node $node): bool
     {
-        return $node instanceof Variable && in_array('$' . $this->resolveVariableName($node), $this->restrictedVariables, true);
+        if ($node instanceof Variable) {
+            $variableName = '$' . $node->name;
+
+            if ($this->matcher === 'exact') {
+                return in_array($variableName, $this->values, true);
+            } elseif ($this->matcher === 'pattern') {
+                foreach ($this->values as $pattern) {
+                    if (preg_match($pattern, $variableName)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
-     * Get the error message for a violation of this rule.
+     * Generates an error message when a restricted variable is used.
      *
-     * @param Node $node The AST node that violated the rule.
+     * @param Node $node The AST node that triggered the rule.
      *
      * @return string The formatted error message.
      */
     public function getErrorMessage(Node $node): string
     {
-        $variableName = $this->resolveVariableName($node);
-
-        if ($variableName === null) {
-            return 'Unknown variable name violated the rule.';
-        }
-
-        return str_replace('{name}', '$' . $variableName, $this->message);
-    }
-
-    /**
-     * Resolves the name of the variable from the node.
-     *
-     * @param Node $node The AST node to resolve the name from.
-     *
-     * @return string|null The name of the variable, or null if it cannot be resolved.
-     */
-    private function resolveVariableName(Node $node): ?string
-    {
         if ($node instanceof Variable) {
-            // If the variable name is a simple string, return it directly
-            if (is_string($node->name)) {
-                return $node->name;
-            } elseif ($node->name instanceof Node\Expr) {
-                // Handle complex cases where the variable name is an expression
-                return $this->resolveComplexVariableName($node->name);
-            }
+            $variableName = '$' . $node->name;
+        } else {
+            $variableName = 'unknown';
         }
 
-        // Return null if the variable name could not be resolved
-        return null;
-    }
-
-    /**
-     * Resolves a complex variable name that is an expression.
-     *
-     * @param Node\Expr $expr The expression representing the variable name.
-     *
-     * @return string|null The resolved variable name, or null if it cannot be resolved.
-     */
-    private function resolveComplexVariableName(Node\Expr $expr): ?string
-    {
-        // Add logic here to resolve complex variable names, for example:
-        if ($expr instanceof Node\Scalar\String_) {
-            return $expr->value;
-        }
-
-        // Add additional cases as necessary for your application
-
-        return null;
+        return str_replace('{value}', $variableName, $this->message);
     }
 }

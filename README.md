@@ -56,32 +56,59 @@ Lynter is configured using a YAML file. The default configuration file is `lynte
 
 ```yaml
 rules:
-  restrictFunction:
-    functions:
+  - name: restrict-functions
+    rule: restrictFunction
+    matcher: exact
+    values:
       - eval
       - exec
-    message: "Function '{name}' is not allowed."
-  
-  restrictVariable:
-    variables:
+      - shell_exec
+    message: "This function '{value}' is not allowed."
+
+  - name: restrict-functions-regex
+    rule: restrictFunction
+    matcher: pattern
+    values:
+      - '/^debug_/' # Restricts any function starting with "debug_"
+    message: "This function matching '{value}' is not allowed."
+
+  - name: restrict-variables
+    rule: restrictVariable
+    matcher: exact
+    values:
       - $_GET
       - $_POST
-    message: "Variables '{name}' is restricted."
-  
-  restrictClass:
-    classes:
+    message: "This variable '{value}' is restricted."
+
+  - name: restrict-variables-regex
+    rule: restrictVariable
+    matcher: pattern
+    values:
+      - '/^\$temp/' # Restricts any variable starting with "$temp"
+    message: "This variable matching '{value}' is restricted."
+
+  - name: restrict-classes
+    rule: restrictClass
+    matcher: exact
+    values:
       - MyRestrictedClass
-      - LegacyClass
-    message: "Instantiation of '{name}' is not allowed."
+    message: "Instantiation of '{value}' is not allowed."
+
+  - name: restrict-classes-regex
+    rule: restrictClass
+    matcher: pattern
+    values:
+      - '/^Legacy/' # Restricts any class starting with "Legacy"
+    message: "Instantiation of class matching '{value}' is not allowed."
 
 exclude:
-  - vendor/
-  - tests/
+  - vendors
+  - tests
 ```
 
 ### Configuration Details
 
-- **rules**: Define the rules for restricting functions, variables, and classes. Each rule type (`restrictFunction`, `restrictVariable`, `restrictClass`) accepts an array of names to restrict and a custom message template.
+- **rules**: Define the rules for restricting functions, variables, and classes. Each rule type (`restrictFunction`, `restrictVariable`, `restrictClass`) accepts an array of values to restrict, a matcher (`exact` or `pattern`), and a custom message template.
 - **exclude**: Specify directories or files to exclude from analysis.
 
 ## Built-in Rules
@@ -94,11 +121,13 @@ Restrict the usage of specific functions.
 #### Example
 ```yaml
 rules:
-  restrictFunction:
-    functions:
+  - name: restrict-functions
+    rule: restrictFunction
+    matcher: exact
+    values:
       - eval
       - exec
-    message: "Function '{name}' is not allowed."
+    message: "This function '{value}' is not allowed."
 ```
 
 ### 2. `restrictVariable`
@@ -107,11 +136,13 @@ Restrict the usage of specific global variables.
 #### Example
 ```yaml
 rules:
-  restrictVariable:
-    variables:
+  - name: restrict-variables
+    rule: restrictVariable
+    matcher: exact
+    values:
       - $_GET
       - $_POST
-    message: "Variables '{name}' is restricted."
+    message: "This variable '{value}' is restricted."
 ```
 
 ### 3. `restrictClass`
@@ -120,11 +151,12 @@ Restrict the instantiation of specific classes.
 #### Example
 ```yaml
 rules:
-  restrictClass:
-    classes:
+  - name: restrict-classes
+    rule: restrictClass
+    matcher: exact
+    values:
       - MyRestrictedClass
-      - LegacyClass
-    message: "Instantiation of '{name}' is not allowed."
+    message: "Instantiation of '{value}' is not allowed."
 ```
 
 ## Excluding Files and Directories
