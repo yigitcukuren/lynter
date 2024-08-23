@@ -24,6 +24,7 @@ class RuleManager
     public function __construct(array $config)
     {
         $this->loadRules($config['rules']);
+        extract($config['rules']);
     }
 
     /**
