@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use Lynter\ConfigLoader;
 use InvalidArgumentException;
+use Lynter\ConfigLoader;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -2,8 +2,8 @@
 
 namespace Lynter;
 
-use Symfony\Component\Yaml\Yaml;
 use InvalidArgumentException;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class ConfigLoader
@@ -37,7 +37,7 @@ class ConfigLoader
      * @return array<string, mixed> The parsed configuration as an associative array.
      *
      * @throws InvalidArgumentException If the configuration is invalid.
-     * @throws \Exception If the configuration file does not exist or contains invalid YAML.
+     * @throws \Exception               If the configuration file does not exist or contains invalid YAML.
      */
     public static function load(string $configFile): array
     {
