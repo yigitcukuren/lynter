@@ -33,6 +33,7 @@
         "fix": "php-cs-fixer fix",
         "check-style": "php-cs-fixer fix --dry-run --diff",
         "analyse": "phpstan analyse",
+        "lynter": "bin/lynter analyze .",
         "test": "phpunit"
     }
 }
