@@ -130,6 +130,11 @@ class LynterCommand extends Command
         // Output the results in the user-specified format
         $this->outputResults($issues, $outputFormat, $output);
 
+            // Return failure code if issues are found
+        if (!empty($issues)) {
+            return Command::FAILURE;
+        }
+
         return Command::SUCCESS;
     }
 
@@ -173,22 +178,18 @@ class LynterCommand extends Command
 
         foreach ($processes as $process) {
             $process->wait();
-            if ($process->isSuccessful()) {
-                $output = $process->getOutput();
-                $decodedOutput = json_decode($output, true);
+            $output = $process->getOutput();
+            $decodedOutput = json_decode($output, true);
 
-                if (
-                    json_last_error() === JSON_ERROR_NONE
-                    && is_array($decodedOutput)
-                ) {
-                    $issues = array_merge($issues, $decodedOutput);
-                } else {
-                    throw new \RuntimeException(
-                        "Invalid output from process: $output"
-                    );
-                }
+            if (
+                json_last_error() === JSON_ERROR_NONE
+                && is_array($decodedOutput)
+            ) {
+                $issues = array_merge($issues, $decodedOutput);
             } else {
-                throw new \RuntimeException($process->getErrorOutput());
+                throw new \RuntimeException(
+                    "Invalid output from process: $output"
+                );
             }
         }
 
