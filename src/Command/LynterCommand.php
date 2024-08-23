@@ -130,7 +130,7 @@ class LynterCommand extends Command
         // Output the results in the user-specified format
         $this->outputResults($issues, $outputFormat, $output);
 
-            // Return failure code if issues are found
+        // Return failure code if issues are found
         if (!empty($issues)) {
             return Command::FAILURE;
         }
