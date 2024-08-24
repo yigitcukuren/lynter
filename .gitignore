@@ -1,5 +1,6 @@
 # Composer dependencies
 /vendor/
+composer.lock
 
 # PHPStorm / JetBrains IDEs
 /.idea/
