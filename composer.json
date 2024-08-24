@@ -1,6 +1,6 @@
 {
     "name": "lynter/lynter",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "description": "A PHP tool for analyzing code and enforcing restrictions on specific functions, variables, and coding patterns.",
     "type": "library",
     "license": "MIT",
