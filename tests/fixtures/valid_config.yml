@@ -3,9 +3,8 @@ rules:
     rule: restrictFunction
     matcher: exact
     values:
-      - eval
-      - exec
-      - shell_exec
+      - var_dump
+      - echo
     message: "This function '{value}' is not allowed."
   
   - name: restrict-functions-regex

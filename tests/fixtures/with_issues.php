@@ -1,8 +1,8 @@
 <?php
 
 // Restricted functions
-eval('echo "This should be restricted";');
-shell_exec('ls');
+var_dump('test');
+print_r('echo');
 
 // Non-restricted function
 nonRestrictedFunction();

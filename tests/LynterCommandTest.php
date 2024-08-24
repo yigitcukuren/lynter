@@ -55,6 +55,6 @@ class LynterCommandTest extends TestCase
         $output = $commandTester->getDisplay();
 
         // Check for the restricted 'eval' function
-        $this->assertStringContainsString("This function 'eval' is not allowed.", $output);
+        $this->assertStringContainsString("This function 'var_dump' is not allowed.", $output);
     }
 }
