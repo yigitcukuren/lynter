@@ -12,10 +12,13 @@ class RawFormatter implements FormatterInterface
     /**
      * Format the analysis results as raw text.
      *
-     * @param  array  $issues The array of issues found during analysis.
+     * @param array<int, array<string, mixed>> $issues   The array of issues found during analysis.
+     * @param array<string, int|float>         $metadata Additional summary information.
+     *
      * @return string The formatted output as a string.
      */
-    public function format(array $issues): string
+    #[\Override]
+    public function format(array $issues, array $metadata = []): string
     {
         $output = "";
 
@@ -48,10 +51,9 @@ class RawFormatter implements FormatterInterface
     }
 
     /**
-     * Groups the issues by the file they were found in.
+     * @param array<int, array<string, mixed>> $issues
      *
-     * @param  array $issues The array of issues to group.
-     * @return array The grouped issues.
+     * @return array<string, array<int, array<string, mixed>>>
      */
     private function groupIssuesByFile(array $issues): array
     {

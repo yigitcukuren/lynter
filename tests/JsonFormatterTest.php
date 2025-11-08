@@ -34,7 +34,7 @@ class JsonFormatterTest extends TestCase
             ],
         ];
 
-        $expectedJson = json_encode($issues, JSON_PRETTY_PRINT);
+        $expectedJson = json_encode(['issues' => $issues], JSON_PRETTY_PRINT);
         $actualJson = $formatter->format($issues);
 
         $this->assertJsonStringEqualsJsonString($expectedJson, $actualJson);
@@ -49,10 +49,41 @@ class JsonFormatterTest extends TestCase
     {
         $formatter = new JsonFormatter();
 
-        $issues = [];
+        $expectedJson = json_encode(['issues' => []], JSON_PRETTY_PRINT);
+        $actualJson = $formatter->format([]);
 
-        $expectedJson = json_encode($issues, JSON_PRETTY_PRINT);
-        $actualJson = $formatter->format($issues);
+        $this->assertJsonStringEqualsJsonString($expectedJson, $actualJson);
+    }
+
+    /**
+     * Ensures metadata is embedded under the summary key.
+     */
+    public function testFormatIncludesSummaryMetadata(): void
+    {
+        $formatter = new JsonFormatter();
+
+        $issues = [
+            ['file' => 'foo.php', 'line' => 10, 'message' => 'msg'],
+        ];
+
+        $summary = [
+            'files' => 10,
+            'time' => 1.234,
+            'rate' => 8.1,
+            'issues' => 1,
+            'parallel' => 2,
+            'batch' => 32,
+        ];
+
+        $expectedJson = json_encode(
+            [
+                'issues' => $issues,
+                'summary' => $summary,
+            ],
+            JSON_PRETTY_PRINT
+        );
+
+        $actualJson = $formatter->format($issues, $summary);
 
         $this->assertJsonStringEqualsJsonString($expectedJson, $actualJson);
     }
